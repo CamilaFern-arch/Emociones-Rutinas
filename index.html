@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mis Emociones y Mi Día 🌈</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #e8f4fd;
+  --sun: #ffd93d;
+  --text-dark: #2d3748;
+  --text-med: #718096;
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --shadow-soft: 0 8px 40px rgba(0,0,0,0.08);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(180deg, #c9e8ff 0%, #e8f4fd 40%, #fdf6f0 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- HEADER --- */
+header { padding: 24px 20px; text-align: center; }
+.header-sun {
+    width: 64px; height: 64px; background: var(--sun); border-radius: 50%;
+    margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; animation: pulseSun 3s infinite; cursor: pointer;
+}
+@keyframes pulseSun { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+/* --- NAV --- */
+.nav-wrap { display: flex; gap: 8px; justify-content: center; padding: 0 16px 18px; flex-wrap: wrap; }
+.nav-pill {
+    padding: 10px 18px; border-radius: 50px; border: 3px solid transparent;
+    font-family: 'Baloo 2', cursive; font-weight: 800; cursor: pointer;
+    background: white; color: var(--text-med); box-shadow: var(--shadow-card);
+}
+.nav-pill.active { color: white; transform: scale(1.05); }
+.nav-pill[data-tab="emocion"].active { background: #ff9a9e; }
+.nav-pill[data-tab="rutina"].active { background: #7bb3f0; }
+.nav-pill[data-tab="hoy"].active { background: #6dcba7; }
+.nav-pill[data-tab="logros"].active { background: #f9a475; }
+
+/* --- SCREENS --- */
+.screen { display: none; padding: 0 16px 80px; max-width: 540px; margin: 0 auto; }
+.screen.active { display: block; animation: slideUp 0.4s ease-out; }
+@keyframes slideUp { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
+
+.card { background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-soft); padding: 20px; margin-bottom: 18px; }
+.card-title { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 800; color: var(--text-dark); }
+
+/* --- RUTINA EDITABLE --- */
+.routine-item {
+    display: flex; align-items: center; gap: 12px; background: #f9f9f9;
+    border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 10px;
+    border: 2px solid transparent; transition: 0.3s;
+}
+.routine-item.done { border-color: #a0e9c6; background: #f0fff8; }
+.routine-info { flex: 1; }
+.time-display { 
+    font-weight: 800; color: #7bb3f0; font-size: 0.85rem; 
+    display: flex; align-items: center; gap: 5px;
+}
+.edit-btn { 
+    background: #eee; border: none; border-radius: 8px; 
+    padding: 4px 8px; cursor: pointer; font-size: 0.8rem;
+}
+.time-input {
+    border: 1px solid #ddd; border-radius: 5px; padding: 2px;
+    font-family: inherit; font-size: 0.8rem; display: none;
+}
+
+/* --- SHARE OVERLAY --- */
+.share-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.share-card {
+    background: white; border-radius: 30px; width: 90%; max-width: 400px;
+    padding: 30px; text-align: center; position: relative;
+    background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://img.icons8.com/emoji/400/000000/rainbow-emoji.png');
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+}
+.share-card h2 { font-family: 'Baloo 2'; color: #2d6a9f; }
+
+/* --- FAB BUTTONS --- */
+.fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; }
+.fab {
+    width: 56px; height: 56px; border-radius: 50%; border: none;
+    color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+}
+.btn-voice { background: #7bb3f0; }
+.btn-share { background: #ff9a9e; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-sun">☀️</div>
+  <h1>Mis Emociones 🌈</h1>
+</header>
+
+<nav class="nav-wrap">
+  <button class="nav-pill active" data-tab="emocion" onclick="showTab('emocion',this)">😊 Emociones</button>
+  <button class="nav-pill" data-tab="rutina" onclick="showTab('rutina',this)">🌅 Rutina</button>
+  <button class="nav-pill" data-tab="hoy" onclick="showTab('hoy',this)">📅 Mi Día</button>
+  <button class="nav-pill" data-tab="logros" onclick="showTab('logros',this)">🏆 Logros</button>
+</nav>
+
+<div class="screen active" id="screen-emocion">
+  <div class="card">
+    <div class="card-title">¿Cómo te sientes?</div>
+    <p style="color: #718096; margin-bottom: 15px;">Toca una emoción para hablar</p>
+    <div id="emotion-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;"></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-rutina">
+  <div class="card">
+    <div class="card-title">🌅 Mi Rutina</div>
+    <p style="margin-bottom: 15px; font-size: 0.9rem;">Pulsa ✏️ para cambiar la hora</p>
+    <div id="routine-list"></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-hoy">
+  <div class="card" style="text-align: center;">
+    <h2 id="today-greet" style="font-family:'Baloo 2'">¡Hola!</h2>
+    <div id="today-progress-bar" style="background:#eee; height:20px; border-radius:10px; margin:20px 0; overflow:hidden;">
+        <div id="progress-fill" style="background:#6dcba7; width:0%; height:100%; transition:0.5s"></div>
+    </div>
+    <p id="progress-text">0 actividades completadas</p>
+  </div>
+</div>
+
+<div class="screen" id="screen-logros">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 4rem;">🏆</div>
+        <h2 style="font-family:'Baloo 2'">¡Tus Logros!</h2>
+        <div id="logros-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"></div>
+    </div>
+</div>
+
+<div class="fab-container">
+    <button class="fab btn-share" onclick="openShare()" title="Compartir">🌈</button>
+    <button class="fab btn-voice" onclick="speakCurrentScreen()" title="Escuchar">🔊</button>
+</div>
+
+<div class="share-overlay" id="share-overlay" onclick="closeShare()">
+    <div class="share-card" onclick="event.stopPropagation()">
+        <div style="font-size: 3rem;">🌈</div>
+        <h2>¡Mira mi día!</h2>
+        <p id="share-stats" style="margin: 15px 0; font-weight: bold;"></p>
+        <p>¡Hecho con amor y alegría!</p>
+        <button class="nav-pill" style="background:#7bb3f0; color:white; margin-top:20px; border:none; width:100%" onclick="closeShare()">¡Genial!</button>
+    </div>
+</div>
+
+<script>
+// --- DATA ---
+const EMOTIONS = [
+  { key: 'feliz', label: 'Feliz', face: '😄', text: '¡Me siento muy feliz!' },
+  { key: 'triste', label: 'Triste', face: '😢', text: 'Estoy un poco triste' },
+  { key: 'enojado', label: 'Enojado', face: '😠', text: '¡Estoy enojado!' },
+  { key: 'calma', label: 'Calma', face: '😌', text: 'Estoy tranquilo' },
+  { key: 'sueño', label: 'Sueño', face: '😴', text: 'Tengo sueño' },
+  { key: 'sorpresa', label: 'Sorpresa', face: '😲', text: '¡Qué sorpresa!' }
+];
+
+let routineData = JSON.parse(localStorage.getItem('myRoutine')) || [
+  { id: 1, icon: '⏰', name: 'Despertar', time: '07:00', done: false },
+  { id: 2, icon: '🥣', name: 'Desayuno', time: '08:00', done: false },
+  { id: 3, icon: '📚', name: 'Escuela', time: '09:00', done: false },
+  { id: 4, icon: '🍎', name: 'Merienda', time: '11:00', done: false },
+  { id: 5, icon: '🧸', name: 'Jugar', time: '16:00', done: false },
+  { id: 6, icon: '🌙', name: 'Dormir', time: '20:30', done: false }
+];
+
+let state = { currentTab: 'emocion' };
+
+// --- CORE FUNCTIONS ---
+function showTab(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  btn.classList.add('active');
+  state.currentTab = name;
+  if(name === 'hoy') updateProgress();
+}
+
+function speak(msg) {
+  const utterance = new SpeechSynthesisUtterance(msg);
+  utterance.lang = 'es-ES';
+  speechSynthesis.speak(utterance);
+}
+
+function updateProgress() {
+    const done = routineData.filter(r => r.done).length;
+    const total = routineData.length;
+    const pct = (done / total) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').innerText = `${done} de ${total} actividades hechas`;
+}
+
+// --- RENDER RUTINA ---
+function renderRoutine() {
+    const list = document.getElementById('routine-list');
+    list.innerHTML = '';
+    routineData.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `routine-item ${item.done ? 'done' : ''}`;
+        div.innerHTML = `
+            <div style="font-size: 1.5rem; cursor:pointer" onclick="toggleDone(${item.id})">${item.icon}</div>
+            <div class="routine-info" onclick="toggleDone(${item.id})">
+                <div style="font-weight:bold">${item.name}</div>
+                <div class="time-display" id="time-text-${item.id}">
+                    <span>${item.time}</span>
+                </div>
+                <input type="time" class="time-input" id="input-${item.id}" value="${item.time}" onchange="saveNewTime(${item.id}, this.value)">
+            </div>
+            <button class="edit-btn" onclick="toggleEdit(${item.id})">✏️</button>
+            <div onclick="toggleDone(${item.id})">${item.done ? '✅' : '⭕'}</div>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function toggleEdit(id) {
+    const input = document.getElementById(`input-${id}`);
+    const text = document.getElementById(`time-text-${id}`);
+    const isEditing = input.style.display === 'block';
+    input.style.display = isEditing ? 'none' : 'block';
+    text.style.display = isEditing ? 'block' : 'none';
+}
+
+function saveNewTime(id, newTime) {
+    const item = routineData.find(r => r.id === id);
+    item.time = newTime;
+    localStorage.setItem('myRoutine', JSON.stringify(routineData));
+    renderRoutine();
+}
+
+function toggleDone(id) {
+    const item = routineData.find(r => r.id === id);
+    item.done = !item.done;
+    localStorage.setItem('myRoutine', JSON.stringify(routineData));
+    renderRoutine();
+    if(item.done) speak(`¡Muy bien! Has terminado ${item.name}`);
+}
+
+// --- EMOCIONES ---
+function renderEmotions() {
+    const grid = document.getElementById('emotion-grid');
+    EMOTIONS.forEach(emo => {
+        const btn = document.createElement('div');
+        btn.style.cssText = "background:#f0f0f0; padding:15px; border-radius:20px; text-align:center; cursor:pointer";
+        btn.innerHTML = `<div style="font-size:2rem">${emo.face}</div><div style="font-size:0.8rem; font-weight:bold">${emo.label}</div>`;
+        btn.onclick = () => speak(emo.text);
+        grid.appendChild(btn);
+    });
+}
+
+// --- SHARE ---
+function openShare() {
+    const done = routineData.filter(r => r.done).length;
+    document.getElementById('share-stats').innerText = `Hoy he completado ${done} actividades de mi rutina.`;
+    document.getElementById('share-overlay').style.display = 'flex';
+}
+
+function closeShare() {
+    document.getElementById('share-overlay').style.display = 'none';
+}
+
+function speakCurrentScreen() {
+    if(state.currentTab === 'rutina') speak("Aquí puedes ver tus tareas. Pulsa el lápiz si quieres cambiar la hora.");
+    if(state.currentTab === 'emocion') speak("Cuéntame, ¿cómo te sientes hoy?");
+    if(state.currentTab === 'hoy') speak("Vamos a ver cuánto has avanzado hoy.");
+}
+
+// Init
+renderRoutine();
+renderEmotions();
+</script>
+</body>
+</html>
