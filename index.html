@@ -1,294 +1,1166 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mis Emociones y Mi Día 🌈</title>
+<title>🌈 Mis Emociones y Mi Día 🌤️</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --sky: #e8f4fd;
+  --cloud: #ffffff;
   --sun: #ffd93d;
+  --soft-pink: #ffd6e7;
+  --soft-green: #d4f5e9;
+  --soft-blue: #d6eaff;
+  --soft-yellow: #fff3cd;
+  --soft-orange: #ffe4cc;
+  --soft-purple: #ead6ff;
   --text-dark: #2d3748;
   --text-med: #718096;
   --radius-xl: 32px;
   --radius-lg: 24px;
+  --radius-md: 16px;
   --shadow-soft: 0 8px 40px rgba(0,0,0,0.08);
   --shadow-card: 0 4px 24px rgba(0,0,0,0.07);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-    font-family: 'Nunito', sans-serif;
-    background: linear-gradient(180deg, #c9e8ff 0%, #e8f4fd 40%, #fdf6f0 100%);
-    min-height: 100vh;
-    overflow-x: hidden;
+font-family: ‘Nunito’, sans-serif;
+background: linear-gradient(180deg, #c9e8ff 0%, #e8f4fd 40%, #fdf6f0 100%);
+min-height: 100vh;
+overflow-x: hidden;
 }
 
-/* --- HEADER --- */
-header { padding: 24px 20px; text-align: center; }
+/* ── FLOATING CLOUDS BG ── */
+.clouds-bg {
+position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+pointer-events: none; z-index: 0; overflow: hidden;
+}
+.cloud {
+position: absolute;
+background: white;
+border-radius: 50px;
+opacity: 0.55;
+animation: driftCloud linear infinite;
+}
+.cloud::before, .cloud::after {
+content: ‘’; position: absolute;
+background: white; border-radius: 50%;
+}
+@keyframes driftCloud {
+from { transform: translateX(-200px); }
+to   { transform: translateX(110vw); }
+}
+
+/* ── HEADER ── */
+header {
+position: relative; z-index: 10;
+padding: 24px 20px 18px;
+text-align: center;
+}
 .header-sun {
-    width: 64px; height: 64px; background: var(--sun); border-radius: 50%;
-    margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; animation: pulseSun 3s infinite; cursor: pointer;
+width: 64px; height: 64px;
+background: var(–sun);
+border-radius: 50%;
+margin: 0 auto 10px;
+box-shadow: 0 0 0 10px #fff3a355, 0 0 0 20px #fff3a322;
+display: flex; align-items: center; justify-content: center;
+font-size: 2rem;
+animation: pulseSun 3s ease-in-out infinite;
+cursor: pointer;
 }
-@keyframes pulseSun { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+@keyframes pulseSun {
+0%,100% { box-shadow: 0 0 0 10px #fff3a355, 0 0 0 20px #fff3a322; transform: scale(1); }
+50%      { box-shadow: 0 0 0 14px #fff3a366, 0 0 0 28px #fff3a333; transform: scale(1.05); }
+}
+header h1 {
+font-family: ‘Baloo 2’, cursive;
+font-size: clamp(1.5rem, 5vw, 2.2rem);
+font-weight: 900;
+color: #2d6a9f;
+text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+}
+header p {
+font-size: 0.88rem; color: #6b9fc4; font-weight: 700; margin-top: 2px;
+}
 
-/* --- NAV --- */
-.nav-wrap { display: flex; gap: 8px; justify-content: center; padding: 0 16px 18px; flex-wrap: wrap; }
+/* ── NAV ── */
+.nav-wrap {
+position: relative; z-index: 10;
+display: flex; gap: 8px;
+justify-content: center;
+padding: 0 16px 18px;
+flex-wrap: wrap;
+}
 .nav-pill {
-    padding: 10px 18px; border-radius: 50px; border: 3px solid transparent;
-    font-family: 'Baloo 2', cursive; font-weight: 800; cursor: pointer;
-    background: white; color: var(--text-med); box-shadow: var(--shadow-card);
+padding: 10px 18px;
+border-radius: 50px;
+border: 3px solid transparent;
+font-family: ‘Baloo 2’, cursive;
+font-size: 0.95rem;
+font-weight: 800;
+cursor: pointer;
+transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+background: white;
+color: var(–text-med);
+box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
-.nav-pill.active { color: white; transform: scale(1.05); }
-.nav-pill[data-tab="emocion"].active { background: #ff9a9e; }
-.nav-pill[data-tab="rutina"].active { background: #7bb3f0; }
-.nav-pill[data-tab="hoy"].active { background: #6dcba7; }
-.nav-pill[data-tab="logros"].active { background: #f9a475; }
+.nav-pill:hover { transform: translateY(-2px); }
+.nav-pill.active {
+color: white;
+transform: scale(1.07) translateY(-2px);
+box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+}
+.nav-pill[data-tab=“emocion”].active  { background: linear-gradient(135deg,#ff9a9e,#fad0c4); border-color:#f78ca0; }
+.nav-pill[data-tab=“rutina”].active   { background: linear-gradient(135deg,#a1c4fd,#c2e9fb); border-color:#7bb3f0; }
+.nav-pill[data-tab=“hoy”].active      { background: linear-gradient(135deg,#b5ead7,#a0e9c6); border-color:#6dcba7; }
+.nav-pill[data-tab=“logros”].active   { background: linear-gradient(135deg,#ffecd2,#fcb69f); border-color:#f9a475; }
 
-/* --- SCREENS --- */
-.screen { display: none; padding: 0 16px 80px; max-width: 540px; margin: 0 auto; }
-.screen.active { display: block; animation: slideUp 0.4s ease-out; }
-@keyframes slideUp { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
+/* ── SCREENS ── */
+.screen { display: none; position: relative; z-index: 5; padding: 0 16px 40px; max-width: 540px; margin: 0 auto; }
+.screen.active { display: block; animation: slideUp 0.38s cubic-bezier(.34,1.4,.64,1); }
+@keyframes slideUp { from { opacity:0; transform: translateY(30px) scale(0.97); } to { opacity:1; transform: none; } }
 
-.card { background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-soft); padding: 20px; margin-bottom: 18px; }
-.card-title { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 800; color: var(--text-dark); }
+/* ── CARDS ── */
+.card {
+background: white;
+border-radius: var(–radius-xl);
+box-shadow: var(–shadow-soft);
+padding: 24px 20px;
+margin-bottom: 18px;
+}
+.card-title {
+font-family: ‘Baloo 2’, cursive;
+font-size: 1.15rem;
+font-weight: 800;
+color: var(–text-dark);
+margin-bottom: 4px;
+}
+.card-sub { font-size: 0.82rem; color: var(–text-med); font-weight: 700; margin-bottom: 16px; }
 
-/* --- RUTINA EDITABLE --- */
+/* ── EMOTION WHEEL ── */
+.emotion-intro {
+text-align: center;
+padding: 8px 0 18px;
+}
+.emotion-intro p {
+font-size: 1rem; font-weight: 700; color: #5a7fa0;
+line-height: 1.5;
+}
+.emotion-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 12px;
+margin-bottom: 6px;
+}
+.emo-btn {
+border-radius: var(–radius-lg);
+border: 4px solid transparent;
+padding: 16px 8px;
+text-align: center;
+cursor: pointer;
+transition: transform 0.2s cubic-bezier(.34,1.6,.64,1), box-shadow 0.2s, border-color 0.2s;
+background: #f8f8f8;
+position: relative;
+overflow: hidden;
+}
+.emo-btn:hover { transform: scale(1.06) translateY(-3px); }
+.emo-btn.selected {
+border-color: currentColor;
+transform: scale(1.10) translateY(-4px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.emo-face {
+font-size: 3rem;
+display: block;
+margin-bottom: 6px;
+filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+transition: transform 0.3s;
+}
+.emo-btn:hover .emo-face { transform: scale(1.15) rotate(-5deg); }
+.emo-btn.selected .emo-face { animation: wobbleEmo 0.5s ease; }
+@keyframes wobbleEmo {
+0%,100%{transform:rotate(0)} 25%{transform:rotate(-12deg) scale(1.2)} 75%{transform:rotate(10deg) scale(1.2)}
+}
+.emo-label {
+font-family: ‘Baloo 2’, cursive;
+font-size: 0.88rem;
+font-weight: 800;
+display: block;
+}
+
+/* EMOTION DETAIL PANEL */
+.emo-detail {
+background: linear-gradient(135deg, #fff9f0, #fff0f5);
+border-radius: var(–radius-lg);
+padding: 20px;
+margin-top: 14px;
+display: none;
+animation: fadeBloom 0.4s ease;
+border: 3px solid #ffd6e7;
+}
+.emo-detail.show { display: block; }
+@keyframes fadeBloom { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+.emo-detail-face { font-size: 4rem; text-align: center; margin-bottom: 10px; }
+.emo-detail h3 {
+font-family: ‘Baloo 2’, cursive;
+font-size: 1.4rem; font-weight: 900;
+text-align: center; margin-bottom: 6px;
+}
+.emo-detail p {
+font-size: 0.9rem; color: #777; font-weight: 700;
+text-align: center; line-height: 1.5; margin-bottom: 14px;
+}
+.emo-tips { display: flex; flex-direction: column; gap: 8px; }
+.emo-tip {
+background: white;
+border-radius: 14px;
+padding: 10px 14px;
+font-size: 0.88rem;
+font-weight: 700;
+color: #555;
+display: flex; align-items: center; gap: 10px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+cursor: pointer;
+transition: transform 0.15s;
+}
+.emo-tip:hover { transform: translateX(4px); }
+.emo-tip-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+/* ── DAILY ROUTINE ── */
+.routine-list { display: flex; flex-direction: column; gap: 10px; }
 .routine-item {
-    display: flex; align-items: center; gap: 12px; background: #f9f9f9;
-    border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 10px;
-    border: 2px solid transparent; transition: 0.3s;
+display: flex;
+align-items: center;
+gap: 14px;
+background: white;
+border-radius: var(–radius-lg);
+padding: 14px 16px;
+box-shadow: var(–shadow-card);
+cursor: pointer;
+transition: transform 0.2s cubic-bezier(.34,1.4,.64,1), box-shadow 0.2s;
+border: 3px solid transparent;
+position: relative;
+overflow: hidden;
 }
-.routine-item.done { border-color: #a0e9c6; background: #f0fff8; }
+.routine-item:hover { transform: translateX(6px); box-shadow: 0 8px 28px rgba(0,0,0,0.10); }
+.routine-item.done {
+border-color: #a0e9c6;
+background: linear-gradient(135deg,#f0fff8,#e8fff5);
+}
+.routine-item.done::after {
+content: ‘✅’;
+position: absolute; right: 14px;
+font-size: 1.4rem;
+animation: popIn 0.3s cubic-bezier(.34,1.6,.64,1);
+}
+@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+.routine-icon {
+width: 52px; height: 52px;
+border-radius: 16px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.8rem;
+flex-shrink: 0;
+transition: transform 0.3s;
+}
+.routine-item:hover .routine-icon { transform: rotate(-8deg) scale(1.1); }
+.routine-item.done .routine-icon { transform: scale(0.9); }
 .routine-info { flex: 1; }
-.time-display { 
-    font-weight: 800; color: #7bb3f0; font-size: 0.85rem; 
-    display: flex; align-items: center; gap: 5px;
+.routine-name {
+font-family: ‘Baloo 2’, cursive;
+font-size: 1rem; font-weight: 800;
+color: var(–text-dark);
 }
-.edit-btn { 
-    background: #eee; border: none; border-radius: 8px; 
-    padding: 4px 8px; cursor: pointer; font-size: 0.8rem;
+.routine-time {
+font-size: 0.78rem; font-weight: 700;
+color: var(–text-med);
+margin-top: 1px;
 }
-.time-input {
-    border: 1px solid #ddd; border-radius: 5px; padding: 2px;
-    font-family: inherit; font-size: 0.8rem; display: none;
+.routine-wave {
+position: absolute; left: 0; top: 0; bottom: 0;
+width: 5px;
+border-radius: 8px 0 0 8px;
+transition: width 0.4s;
+}
+.routine-item.done .routine-wave { width: 100%; opacity: 0.07; }
+
+/* ── HOY (TODAY MOOD + SCHEDULE) ── */
+.today-greeting {
+text-align: center;
+padding: 10px 0 20px;
+}
+.today-greeting .big-emoji {
+font-size: 4.5rem;
+display: block;
+animation: floatBob 3s ease-in-out infinite;
+margin-bottom: 8px;
+cursor: pointer;
+}
+@keyframes floatBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.today-greeting h2 {
+font-family: ‘Baloo 2’, cursive;
+font-size: 1.6rem; font-weight: 900;
+color: #2d6a9f;
+}
+.today-greeting p { font-size: 0.9rem; color: #7fa8c9; font-weight: 700; margin-top: 4px; }
+
+.mood-quick {
+display: flex; gap: 10px; justify-content: center;
+margin-bottom: 20px; flex-wrap: wrap;
+}
+.mood-quick-btn {
+width: 68px; height: 68px;
+border-radius: 20px;
+border: 3px solid transparent;
+font-size: 2.2rem;
+cursor: pointer;
+background: white;
+box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+transition: transform 0.2s cubic-bezier(.34,1.6,.64,1), border-color 0.2s;
+display: flex; align-items: center; justify-content: center;
+}
+.mood-quick-btn:hover { transform: scale(1.15) rotate(8deg); }
+.mood-quick-btn.picked {
+border-color: #74c7a5;
+background: linear-gradient(135deg,#e8fff5,#d4f5e9);
+transform: scale(1.18);
+box-shadow: 0 6px 20px rgba(100,200,150,0.3);
 }
 
-/* --- SHARE OVERLAY --- */
-.share-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-    display: none; align-items: center; justify-content: center; z-index: 1000;
+.today-progress-wrap {
+background: #f0f0f0;
+border-radius: 50px;
+height: 12px;
+overflow: hidden;
+margin-bottom: 6px;
 }
-.share-card {
-    background: white; border-radius: 30px; width: 90%; max-width: 400px;
-    padding: 30px; text-align: center; position: relative;
-    background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://img.icons8.com/emoji/400/000000/rainbow-emoji.png');
-    background-size: contain; background-repeat: no-repeat; background-position: center;
+.today-progress-fill {
+height: 100%;
+border-radius: 50px;
+background: linear-gradient(90deg, #a0e9c6, #74c7a5);
+transition: width 0.6s cubic-bezier(.34,1.2,.64,1);
 }
-.share-card h2 { font-family: 'Baloo 2'; color: #2d6a9f; }
+.today-progress-label {
+font-size: 0.82rem; font-weight: 800; color: var(–text-med);
+text-align: right; margin-bottom: 14px;
+}
 
-/* --- FAB BUTTONS --- */
-.fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; }
-.fab {
-    width: 56px; height: 56px; border-radius: 50%; border: none;
-    color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: flex; align-items: center; justify-content: center;
+.today-schedule { display: flex; flex-direction: column; gap: 8px; }
+.sched-item {
+display: flex; align-items: center; gap: 12px;
+padding: 12px 14px;
+border-radius: 18px;
+transition: all 0.2s;
+cursor: pointer;
 }
-.btn-voice { background: #7bb3f0; }
-.btn-share { background: #ff9a9e; }
+.sched-item.current {
+background: linear-gradient(135deg,#fff9e6,#fff3cd);
+box-shadow: 0 4px 16px rgba(255,211,80,0.25);
+transform: scale(1.02);
+}
+.sched-item.past { opacity: 0.5; }
+.sched-item.future { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.sched-icon { font-size: 1.8rem; width: 44px; text-align: center; flex-shrink: 0; }
+.sched-info { flex: 1; }
+.sched-name { font-family: ‘Baloo 2’, cursive; font-size: 0.95rem; font-weight: 800; color: var(–text-dark); }
+.sched-time { font-size: 0.75rem; font-weight: 700; color: var(–text-med); }
+.sched-badge {
+font-size: 0.7rem; font-weight: 800; color: white;
+background: #ffd93d;
+padding: 3px 10px; border-radius: 50px;
+white-space: nowrap;
+}
 
+/* ── LOGROS ── */
+.logros-header {
+text-align: center; padding: 8px 0 20px;
+}
+.logros-header .trophy { font-size: 4rem; display: block; animation: pulseSun 2.5s ease-in-out infinite; }
+.logros-header h2 { font-family: ‘Baloo 2’, cursive; font-size: 1.5rem; font-weight: 900; color: #c47a1a; }
+.logros-header p { font-size: 0.88rem; color: #b09070; font-weight: 700; }
+
+.logros-grid {
+display: grid; grid-template-columns: 1fr 1fr;
+gap: 10px; margin-bottom: 16px;
+}
+.logro-card {
+background: white;
+border-radius: var(–radius-lg);
+padding: 16px 12px;
+text-align: center;
+box-shadow: var(–shadow-card);
+transition: transform 0.2s;
+border: 3px solid transparent;
+}
+.logro-card.earned {
+background: linear-gradient(135deg,#fffde7,#fff8cc);
+border-color: #ffd93d;
+box-shadow: 0 6px 20px rgba(255,200,0,0.2);
+}
+.logro-card:hover { transform: scale(1.04); }
+.logro-icon { font-size: 2.2rem; display: block; margin-bottom: 6px; }
+.logro-name { font-family: ‘Baloo 2’, cursive; font-size: 0.82rem; font-weight: 800; color: #555; }
+.logro-card.earned .logro-name { color: #c47a1a; }
+.logro-card:not(.earned) { opacity: 0.5; filter: grayscale(0.5); }
+
+.stats-row {
+display: flex; gap: 10px; justify-content: center; margin-top: 4px;
+}
+.stat-pill {
+background: white;
+border-radius: 50px;
+padding: 10px 18px;
+text-align: center;
+box-shadow: var(–shadow-card);
+flex: 1;
+}
+.stat-num { font-family: ‘Baloo 2’, cursive; font-size: 1.6rem; font-weight: 900; color: #2d6a9f; }
+.stat-label { font-size: 0.72rem; font-weight: 800; color: var(–text-med); }
+
+/* ── VOICE BUTTON ── */
+.voice-fab {
+position: fixed; bottom: 24px; right: 20px; z-index: 100;
+width: 62px; height: 62px;
+border-radius: 50%;
+background: linear-gradient(135deg,#a1c4fd,#c2e9fb);
+border: none;
+font-size: 1.8rem;
+cursor: pointer;
+box-shadow: 0 8px 28px rgba(100,160,255,0.4);
+transition: transform 0.2s cubic-bezier(.34,1.6,.64,1), box-shadow 0.2s;
+display: flex; align-items: center; justify-content: center;
+}
+.voice-fab:hover { transform: scale(1.12); }
+.voice-fab.speaking {
+animation: speakPulse 0.8s ease-in-out infinite;
+background: linear-gradient(135deg,#74c7a5,#a0e9c6);
+}
+@keyframes speakPulse {
+0%,100%{transform:scale(1);box-shadow:0 8px 28px rgba(100,200,150,0.4)}
+50%{transform:scale(1.12);box-shadow:0 12px 38px rgba(100,200,150,0.6)}
+}
+
+/* ── CELEBRATION OVERLAY ── */
+.celeb-overlay {
+position: fixed; inset: 0; z-index: 200;
+background: rgba(0,0,0,0.3);
+display: none; align-items: center; justify-content: center;
+}
+.celeb-overlay.show { display: flex; }
+.celeb-box {
+background: white;
+border-radius: 36px;
+padding: 40px 32px;
+text-align: center;
+box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+animation: popIn 0.45s cubic-bezier(.34,1.6,.64,1);
+max-width: 300px; width: 90%;
+}
+.celeb-emoji { font-size: 5rem; display: block; animation: wobbleEmo 1s ease infinite; }
+.celeb-box h2 { font-family: ‘Baloo 2’, cursive; font-size: 1.8rem; font-weight: 900; color: #2e7d32; margin: 10px 0 6px; }
+.celeb-box p { color: #888; font-size: 0.95rem; font-weight: 700; margin-bottom: 20px; }
+.celeb-close {
+padding: 13px 32px;
+border-radius: 50px; border: none;
+background: linear-gradient(135deg,#b5ead7,#74c7a5);
+color: white;
+font-family: ‘Baloo 2’, cursive;
+font-size: 1.1rem; font-weight: 800;
+cursor: pointer;
+box-shadow: 0 6px 18px rgba(100,200,150,0.35);
+transition: transform 0.15s;
+}
+.celeb-close:hover { transform: scale(1.05); }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+position: fixed;
+width: 10px; height: 10px;
+border-radius: 2px;
+animation: confettiFall 1.8s ease-in forwards;
+z-index: 300;
+pointer-events: none;
+}
+@keyframes confettiFall {
+0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ── TOAST ── */
+.toast {
+position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+background: white;
+border-radius: 50px;
+padding: 10px 22px;
+font-family: ‘Baloo 2’, cursive;
+font-size: 0.95rem; font-weight: 800;
+color: #333;
+box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+z-index: 150;
+opacity: 0;
+transition: all 0.35s cubic-bezier(.34,1.4,.64,1);
+pointer-events: none;
+white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── BREATHING EXERCISE ── */
+.breath-circle {
+width: 130px; height: 130px;
+border-radius: 50%;
+background: linear-gradient(135deg,#a8edea,#fed6e3);
+margin: 16px auto;
+display: flex; align-items: center; justify-content: center;
+font-size: 3rem;
+cursor: pointer;
+box-shadow: 0 0 0 0 rgba(168,237,234,0.5);
+transition: transform 0.3s;
+}
+.breath-circle.inhale {
+animation: breatheIn 3s ease-in-out forwards;
+}
+.breath-circle.exhale {
+animation: breatheOut 3s ease-in-out forwards;
+}
+@keyframes breatheIn {
+from { transform: scale(1); box-shadow: 0 0 0 0 rgba(168,237,234,0.5); }
+to   { transform: scale(1.35); box-shadow: 0 0 0 28px rgba(168,237,234,0); }
+}
+@keyframes breatheOut {
+from { transform: scale(1.35); }
+to   { transform: scale(1); }
+}
+.breath-label {
+text-align: center; font-family: ‘Baloo 2’, cursive;
+font-size: 1rem; font-weight: 800; color: #7fb5c4;
+margin-top: 4px; min-height: 24px;
+}
 </style>
+
 </head>
 <body>
 
+<!-- Floating clouds -->
+
+<div class="clouds-bg" id="clouds-bg"></div>
+
 <header>
-  <div class="header-sun">☀️</div>
-  <h1>Mis Emociones 🌈</h1>
+  <div class="header-sun" onclick="speakWelcome()">☀️</div>
+  <h1>Mis Emociones y Mi Día</h1>
+  <p>Para niños de 3 a 7 años · Con amor 🌸</p>
 </header>
 
 <nav class="nav-wrap">
   <button class="nav-pill active" data-tab="emocion" onclick="showTab('emocion',this)">😊 Emociones</button>
-  <button class="nav-pill" data-tab="rutina" onclick="showTab('rutina',this)">🌅 Rutina</button>
+  <button class="nav-pill" data-tab="rutina" onclick="showTab('rutina',this)">🌅 Mi Rutina</button>
   <button class="nav-pill" data-tab="hoy" onclick="showTab('hoy',this)">📅 Mi Día</button>
   <button class="nav-pill" data-tab="logros" onclick="showTab('logros',this)">🏆 Logros</button>
 </nav>
 
+<!-- ════════ EMOCIONES ════════ -->
+
 <div class="screen active" id="screen-emocion">
+
   <div class="card">
-    <div class="card-title">¿Cómo te sientes?</div>
-    <p style="color: #718096; margin-bottom: 15px;">Toca una emoción para hablar</p>
-    <div id="emotion-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;"></div>
+    <div class="emotion-intro">
+      <p>¿Cómo te sientes ahora? 💬<br>Toca tu emoción para aprender más</p>
+    </div>
+    <div class="emotion-grid" id="emotion-grid"></div>
+    <div class="emo-detail" id="emo-detail">
+      <div class="emo-detail-face" id="emo-detail-face"></div>
+      <h3 id="emo-detail-name"></h3>
+      <p id="emo-detail-desc"></p>
+      <div class="emo-tips" id="emo-tips"></div>
+    </div>
   </div>
+
+  <div class="card">
+    <div class="card-title">🌬️ Ejercicio de Calma</div>
+    <div class="card-sub">Toca el círculo y respira conmigo</div>
+    <div class="breath-circle" id="breath-circle" onclick="startBreath()">🌸</div>
+    <div class="breath-label" id="breath-label">Toca para empezar</div>
+  </div>
+
 </div>
+
+<!-- ════════ RUTINA ════════ -->
 
 <div class="screen" id="screen-rutina">
   <div class="card">
-    <div class="card-title">🌅 Mi Rutina</div>
-    <p style="margin-bottom: 15px; font-size: 0.9rem;">Pulsa ✏️ para cambiar la hora</p>
-    <div id="routine-list"></div>
+    <div class="card-title">🌅 Mi Rutina Diaria</div>
+    <div class="card-sub">Toca cada actividad cuando la termines ✅</div>
+    <div class="routine-list" id="routine-list"></div>
   </div>
 </div>
+
+<!-- ════════ HOY ════════ -->
 
 <div class="screen" id="screen-hoy">
-  <div class="card" style="text-align: center;">
-    <h2 id="today-greet" style="font-family:'Baloo 2'">¡Hola!</h2>
-    <div id="today-progress-bar" style="background:#eee; height:20px; border-radius:10px; margin:20px 0; overflow:hidden;">
-        <div id="progress-fill" style="background:#6dcba7; width:0%; height:100%; transition:0.5s"></div>
+  <div class="today-greeting">
+    <span class="big-emoji" id="today-emoji" onclick="speakGreeting()">🌤️</span>
+    <h2 id="today-title">¡Hola! ¿Cómo estás hoy?</h2>
+    <p id="today-sub">Elige cómo te sientes ahora mismo</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">¿Cómo estás hoy? 💭</div>
+    <div class="mood-quick" id="mood-quick"></div>
+    <div class="today-progress-wrap">
+      <div class="today-progress-fill" id="today-progress" style="width:0%"></div>
     </div>
-    <p id="progress-text">0 actividades completadas</p>
+    <div class="today-progress-label" id="today-progress-label">0 de 6 actividades hechas</div>
+    <div class="today-schedule" id="today-schedule"></div>
   </div>
 </div>
 
+<!-- ════════ LOGROS ════════ -->
+
 <div class="screen" id="screen-logros">
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 4rem;">🏆</div>
-        <h2 style="font-family:'Baloo 2'">¡Tus Logros!</h2>
-        <div id="logros-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"></div>
+  <div class="logros-header">
+    <span class="trophy">🏆</span>
+    <h2>¡Mis Logros!</h2>
+    <p>¡Mira todo lo que has aprendido!</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill">
+      <div class="stat-num" id="stat-dias">0</div>
+      <div class="stat-label">Días activos</div>
     </div>
+    <div class="stat-pill">
+      <div class="stat-num" id="stat-emociones">0</div>
+      <div class="stat-label">Emociones aprendidas</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-num" id="stat-rutinas">0</div>
+      <div class="stat-label">Actividades hechas</div>
+    </div>
+  </div>
+  <br>
+  <div class="logros-grid" id="logros-grid"></div>
 </div>
 
-<div class="fab-container">
-    <button class="fab btn-share" onclick="openShare()" title="Compartir">🌈</button>
-    <button class="fab btn-voice" onclick="speakCurrentScreen()" title="Escuchar">🔊</button>
+<!-- Voice FAB -->
+
+<button class="voice-fab" id="voice-fab" onclick="speakCurrentScreen()" title="Escuchar">🔊</button>
+
+<!-- Celebration -->
+
+<div class="celeb-overlay" id="celeb-overlay">
+  <div class="celeb-box">
+    <span class="celeb-emoji" id="celeb-emoji">🎉</span>
+    <h2 id="celeb-title">¡Muy bien!</h2>
+    <p id="celeb-msg">¡Lo hiciste genial!</p>
+    <button class="celeb-close" onclick="closeCeleb()">👍 ¡Gracias!</button>
+  </div>
 </div>
 
-<div class="share-overlay" id="share-overlay" onclick="closeShare()">
-    <div class="share-card" onclick="event.stopPropagation()">
-        <div style="font-size: 3rem;">🌈</div>
-        <h2>¡Mira mi día!</h2>
-        <p id="share-stats" style="margin: 15px 0; font-weight: bold;"></p>
-        <p>¡Hecho con amor y alegría!</p>
-        <button class="nav-pill" style="background:#7bb3f0; color:white; margin-top:20px; border:none; width:100%" onclick="closeShare()">¡Genial!</button>
-    </div>
-</div>
+<!-- Toast -->
+
+<div class="toast" id="toast"></div>
 
 <script>
-// --- DATA ---
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
 const EMOTIONS = [
-  { key: 'feliz', label: 'Feliz', face: '😄', text: '¡Me siento muy feliz!' },
-  { key: 'triste', label: 'Triste', face: '😢', text: 'Estoy un poco triste' },
-  { key: 'enojado', label: 'Enojado', face: '😠', text: '¡Estoy enojado!' },
-  { key: 'calma', label: 'Calma', face: '😌', text: 'Estoy tranquilo' },
-  { key: 'sueño', label: 'Sueño', face: '😴', text: 'Tengo sueño' },
-  { key: 'sorpresa', label: 'Sorpresa', face: '😲', text: '¡Qué sorpresa!' }
+  {
+    key: 'feliz', label: 'Feliz', face: '😄', color: '#ffd93d', bg: '#fff8d6',
+    desc: 'Sentirse feliz es maravilloso. Tu corazón se siente ligero y con ganas de sonreír.',
+    tips: [
+      { icon: '🎵', text: 'Canta una canción que te guste' },
+      { icon: '🤗', text: 'Da un abrazo a alguien especial' },
+      { icon: '🎨', text: 'Dibuja algo lindo' },
+    ]
+  },
+  {
+    key: 'triste', label: 'Triste', face: '😢', color: '#74a7d4', bg: '#e8f4ff',
+    desc: 'Estar triste está bien. Todos nos ponemos tristes a veces. Es normal sentir eso.',
+    tips: [
+      { icon: '🤗', text: 'Pide un abrazo a mamá o papá' },
+      { icon: '🧸', text: 'Abraza tu juguete favorito' },
+      { icon: '💧', text: 'Está bien llorar un poquito' },
+    ]
+  },
+  {
+    key: 'enojado', label: 'Enojado', face: '😠', color: '#e57373', bg: '#ffebee',
+    desc: 'A veces nos enojamos. Es una emoción normal. Podemos calmarnos poco a poco.',
+    tips: [
+      { icon: '🌬️', text: 'Respira profundo 3 veces' },
+      { icon: '🦶', text: 'Pisa fuerte el suelo 5 veces' },
+      { icon: '💬', text: 'Dile a alguien cómo te sientes' },
+    ]
+  },
+  {
+    key: 'asustado', label: 'Asustado', face: '😨', color: '#9575cd', bg: '#f3e5f5',
+    desc: 'Sentir miedo nos avisa que necesitamos ayuda. Siempre puedes pedir ayuda.',
+    tips: [
+      { icon: '🤝', text: 'Busca a un adulto de confianza' },
+      { icon: '💡', text: 'Enciende la luz si hay oscuridad' },
+      { icon: '🧸', text: 'Abraza algo suave y blando' },
+    ]
+  },
+  {
+    key: 'sorprendido', label: 'Sorprendido', face: '😲', color: '#4db6ac', bg: '#e0f7f5',
+    desc: 'Las sorpresas pueden ser divertidas o extrañas. Está bien tomarse un momento.',
+    tips: [
+      { icon: '🧘', text: 'Para un momento y respira' },
+      { icon: '💬', text: 'Cuenta lo que pasó' },
+      { icon: '😄', text: 'Si fue bueno, ¡celebra!' },
+    ]
+  },
+  {
+    key: 'cansado', label: 'Cansado', face: '😴', color: '#a5b4fc', bg: '#eef2ff',
+    desc: 'Estar cansado significa que tu cuerpo necesita descansar. ¡Escúchalo!',
+    tips: [
+      { icon: '🛏️', text: 'Descansa o toma una siesta' },
+      { icon: '💧', text: 'Toma un poco de agua' },
+      { icon: '🌙', text: 'Si es de noche, es hora de dormir' },
+    ]
+  },
 ];
 
-let routineData = JSON.parse(localStorage.getItem('myRoutine')) || [
-  { id: 1, icon: '⏰', name: 'Despertar', time: '07:00', done: false },
-  { id: 2, icon: '🥣', name: 'Desayuno', time: '08:00', done: false },
-  { id: 3, icon: '📚', name: 'Escuela', time: '09:00', done: false },
-  { id: 4, icon: '🍎', name: 'Merienda', time: '11:00', done: false },
-  { id: 5, icon: '🧸', name: 'Jugar', time: '16:00', done: false },
-  { id: 6, icon: '🌙', name: 'Dormir', time: '20:30', done: false }
+const ROUTINE = [
+  { id: 'despertar',  icon: '⏰', name: 'Despertar',       time: '7:00 am',  color: '#ffd93d', bg: '#fff8d6' },
+  { id: 'aseo',       icon: '🚿', name: 'Bañarme',         time: '7:15 am',  color: '#74c7a5', bg: '#d4f5e9' },
+  { id: 'vestir',     icon: '👕', name: 'Vestirme',        time: '7:30 am',  color: '#a1c4fd', bg: '#d6eaff' },
+  { id: 'desayuno',   icon: '🥣', name: 'Desayunar',       time: '7:45 am',  color: '#fcb69f', bg: '#ffe4cc' },
+  { id: 'dientes',    icon: '🦷', name: 'Cepillar dientes',time: '8:00 am',  color: '#f9a8d4', bg: '#ffd6e7' },
+  { id: 'escuela',    icon: '🎒', name: 'Ir a la escuela', time: '8:15 am',  color: '#c4b5fd', bg: '#ead6ff' },
+  { id: 'almuerzo',   icon: '🥗', name: 'Almorzar',        time: '12:30 pm', color: '#6ee7b7', bg: '#d4f5e9' },
+  { id: 'jugar',      icon: '🎮', name: 'Tiempo de juego', time: '2:00 pm',  color: '#fcd34d', bg: '#fff3cd' },
+  { id: 'merienda',   icon: '🍎', name: 'Merienda',        time: '4:00 pm',  color: '#f87171', bg: '#ffebee' },
+  { id: 'tarea',      icon: '📚', name: 'Hacer tareas',    time: '5:00 pm',  color: '#93c5fd', bg: '#dbeafe' },
+  { id: 'cena',       icon: '🍽️', name: 'Cenar',          time: '7:00 pm',  color: '#d8b4fe', bg: '#f3e8ff' },
+  { id: 'dormir',     icon: '🌙', name: 'Dormir',          time: '8:30 pm',  color: '#818cf8', bg: '#e0e7ff' },
 ];
 
-let state = { currentTab: 'emocion' };
+const LOGROS_DEF = [
+  { key: 'primera_emocion', icon: '💛', name: 'Primera emoción' },
+  { key: 'todas_emociones', icon: '🌈', name: '¡Todas las emociones!' },
+  { key: 'primera_rutina', icon: '⭐', name: 'Primera actividad' },
+  { key: 'rutina_completa', icon: '🏅', name: 'Rutina completa' },
+  { key: 'calma', icon: '🌸', name: 'Ejercicio de calma' },
+  { key: 'estado_animo', icon: '☀️', name: 'Mi estado de ánimo' },
+  { key: 'tres_dias', icon: '🗓️', name: '3 días seguidos' },
+  { key: 'explorador', icon: '🔭', name: 'Gran explorador' },
+];
 
-// --- CORE FUNCTIONS ---
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let state = JSON.parse(localStorage.getItem('miDia_v2') || 'null') || {
+  routineDone: {},
+  earnedLogros: {},
+  todayMood: null,
+  visitedEmotions: {},
+  breathCount: 0,
+  activeDays: 1,
+  totalRoutine: 0,
+};
+// Track today's date
+const TODAY = new Date().toDateString();
+if (state.lastDay !== TODAY) {
+  state.lastDay = TODAY;
+  state.routineDone = {};
+  if (state.activeDays !== undefined) state.activeDays++;
+  else state.activeDays = 1;
+  saveState();
+}
+
+function saveState() { localStorage.setItem('miDia_v2', JSON.stringify(state)); }
+
+let currentTab = 'emocion';
+let breathPhase = null, breathTimeout = null;
+
+// ═══════════════════════════════════════════════════════════
+// VOICE — soft, slow Spanish
+// ═══════════════════════════════════════════════════════════
+let voices = [];
+function loadVoices() {
+  voices = speechSynthesis.getVoices();
+}
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function speak(text, onEnd) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES';
+  u.rate = 0.72;
+  u.pitch = 1.2;
+  u.volume = 1;
+  // Prefer a female Spanish voice
+  const pref = voices.find(v => /es/i.test(v.lang) && /female|mujer|lucia|paulina|mia|mónica/i.test(v.name))
+             || voices.find(v => /es/i.test(v.lang))
+             || null;
+  if (pref) u.voice = pref;
+
+  const fab = document.getElementById('voice-fab');
+  fab.classList.add('speaking');
+  u.onend = () => { fab.classList.remove('speaking'); if (onEnd) onEnd(); };
+  u.onerror = () => fab.classList.remove('speaking');
+  speechSynthesis.speak(u);
+}
+
+function speakWelcome() {
+  speak('¡Hola! Bienvenido a tu app. Aquí aprenderemos sobre emociones y nuestra rutina del día.');
+}
+function speakGreeting() {
+  const greets = [
+    '¡Hola! ¿Cómo estás hoy? ¡Qué bueno verte!',
+    '¡Buenos días! Hoy va a ser un día increíble.',
+    '¡Hola amigo! Estoy muy contento de verte.',
+  ];
+  speak(greets[Math.floor(Math.random() * greets.length)]);
+}
+function speakCurrentScreen() {
+  const msgs = {
+    emocion:  'Esta es la pantalla de emociones. Toca una emoción para aprender sobre ella y practicar la calma.',
+    rutina:   'Esta es tu rutina del día. Toca cada actividad cuando la termines.',
+    hoy:      'Aquí puedes ver cómo te sientes hoy y qué actividades tienes.',
+    logros:   'Aquí están todos tus logros. ¡Mira lo mucho que has aprendido!',
+  };
+  speak(msgs[currentTab] || '¡Hola!');
+}
+
+// ═══════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════
 function showTab(name, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
   btn.classList.add('active');
-  state.currentTab = name;
-  if(name === 'hoy') updateProgress();
+  currentTab = name;
+  if (name === 'logros') renderLogros();
+  if (name === 'hoy')    renderHoy();
 }
 
-function speak(msg) {
-  const utterance = new SpeechSynthesisUtterance(msg);
-  utterance.lang = 'es-ES';
-  speechSynthesis.speak(utterance);
+// ═══════════════════════════════════════════════════════════
+// CLOUDS BACKGROUND
+// ═══════════════════════════════════════════════════════════
+function buildClouds() {
+  const bg = document.getElementById('clouds-bg');
+  for (let i = 0; i < 6; i++) {
+    const c = document.createElement('div');
+    c.className = 'cloud';
+    const w = 80 + Math.random() * 120;
+    const h = w * 0.4;
+    c.style.cssText = `
+      width:${w}px;height:${h}px;
+      top:${5 + Math.random() * 35}%;
+      animation-duration:${28 + Math.random() * 40}s;
+      animation-delay:${-Math.random() * 50}s;
+      opacity:${0.3 + Math.random() * 0.3};
+    `;
+    c.before;
+    bg.appendChild(c);
+  }
+}
+buildClouds();
+
+// ═══════════════════════════════════════════════════════════
+// EMOTIONS
+// ═══════════════════════════════════════════════════════════
+function buildEmotionGrid() {
+  const grid = document.getElementById('emotion-grid');
+  EMOTIONS.forEach(emo => {
+    const btn = document.createElement('div');
+    btn.className = 'emo-btn';
+    btn.id = 'emo-' + emo.key;
+    btn.style.background = emo.bg;
+    btn.innerHTML = `<span class="emo-face">${emo.face}</span><span class="emo-label" style="color:${emo.color}">${emo.label}</span>`;
+    btn.onclick = () => selectEmotion(emo, btn);
+    grid.appendChild(btn);
+  });
 }
 
-function updateProgress() {
-    const done = routineData.filter(r => r.done).length;
-    const total = routineData.length;
-    const pct = (done / total) * 100;
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-text').innerText = `${done} de ${total} actividades hechas`;
+function selectEmotion(emo, btn) {
+  document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  btn.style.borderColor = emo.color;
+
+  // Fill detail
+  const det = document.getElementById('emo-detail');
+  document.getElementById('emo-detail-face').textContent = emo.face;
+  document.getElementById('emo-detail-name').textContent = emo.label;
+  document.getElementById('emo-detail-name').style.color = emo.color;
+  document.getElementById('emo-detail-desc').textContent = emo.desc;
+  det.style.borderColor = emo.color + '88';
+  det.style.background = `linear-gradient(135deg, ${emo.bg}, white)`;
+
+  const tipsEl = document.getElementById('emo-tips');
+  tipsEl.innerHTML = '';
+  emo.tips.forEach(tip => {
+    const d = document.createElement('div');
+    d.className = 'emo-tip';
+    d.innerHTML = `<span class="emo-tip-icon">${tip.icon}</span>${tip.text}`;
+    d.onclick = () => speak(tip.text);
+    tipsEl.appendChild(d);
+  });
+  det.classList.add('show');
+
+  // Speak
+  speak(`${emo.label}. ${emo.desc}`);
+
+  // State / logros
+  state.visitedEmotions[emo.key] = true;
+  if (!state.earnedLogros['primera_emocion']) {
+    state.earnedLogros['primera_emocion'] = true;
+    showToast('🏆 ¡Nuevo logro! Primera emoción');
+  }
+  if (Object.keys(state.visitedEmotions).length >= EMOTIONS.length && !state.earnedLogros['todas_emociones']) {
+    state.earnedLogros['todas_emociones'] = true;
+    setTimeout(() => celebrate('🌈 ¡Increíble!', '¡Conoces todas las emociones!'), 800);
+  }
+  if (!state.earnedLogros['estado_animo']) {
+    state.earnedLogros['estado_animo'] = true;
+  }
+  saveState();
 }
 
-// --- RENDER RUTINA ---
-function renderRoutine() {
-    const list = document.getElementById('routine-list');
-    list.innerHTML = '';
-    routineData.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `routine-item ${item.done ? 'done' : ''}`;
-        div.innerHTML = `
-            <div style="font-size: 1.5rem; cursor:pointer" onclick="toggleDone(${item.id})">${item.icon}</div>
-            <div class="routine-info" onclick="toggleDone(${item.id})">
-                <div style="font-weight:bold">${item.name}</div>
-                <div class="time-display" id="time-text-${item.id}">
-                    <span>${item.time}</span>
-                </div>
-                <input type="time" class="time-input" id="input-${item.id}" value="${item.time}" onchange="saveNewTime(${item.id}, this.value)">
-            </div>
-            <button class="edit-btn" onclick="toggleEdit(${item.id})">✏️</button>
-            <div onclick="toggleDone(${item.id})">${item.done ? '✅' : '⭕'}</div>
-        `;
-        list.appendChild(div);
-    });
+// ═══════════════════════════════════════════════════════════
+// BREATHING EXERCISE
+// ═══════════════════════════════════════════════════════════
+function startBreath() {
+  if (breathPhase === 'inhale') return;
+  const circle = document.getElementById('breath-circle');
+  const label = document.getElementById('breath-label');
+
+  breathPhase = 'inhale';
+  circle.className = 'breath-circle inhale';
+  label.textContent = '🌬️ Inhala... 1... 2... 3...';
+  speak('Inhala lentamente. Uno, dos, tres.');
+
+  breathTimeout = setTimeout(() => {
+    breathPhase = 'exhale';
+    circle.className = 'breath-circle exhale';
+    label.textContent = '😮‍💨 Exhala... 1... 2... 3...';
+    speak('Ahora exhala suavemente. Uno, dos, tres.');
+
+    breathTimeout = setTimeout(() => {
+      breathPhase = null;
+      circle.className = 'breath-circle';
+      label.textContent = '🌸 ¡Muy bien! Toca para repetir';
+      speak('Muy bien. Te sientes más tranquilo.');
+      state.breathCount = (state.breathCount || 0) + 1;
+      if (!state.earnedLogros['calma']) {
+        state.earnedLogros['calma'] = true;
+        showToast('🌸 ¡Nuevo logro! Ejercicio de calma');
+      }
+      saveState();
+    }, 4000);
+  }, 4000);
 }
 
-function toggleEdit(id) {
-    const input = document.getElementById(`input-${id}`);
-    const text = document.getElementById(`time-text-${id}`);
-    const isEditing = input.style.display === 'block';
-    input.style.display = isEditing ? 'none' : 'block';
-    text.style.display = isEditing ? 'block' : 'none';
+// ═══════════════════════════════════════════════════════════
+// ROUTINE
+// ═══════════════════════════════════════════════════════════
+function buildRoutine() {
+  const list = document.getElementById('routine-list');
+  ROUTINE.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'routine-item' + (state.routineDone[item.id] ? ' done' : '');
+    el.id = 'r-' + item.id;
+    el.innerHTML = `
+      <div class="routine-wave" style="background:${item.color}"></div>
+      <div class="routine-icon" style="background:${item.bg}">${item.icon}</div>
+      <div class="routine-info">
+        <div class="routine-name">${item.name}</div>
+        <div class="routine-time">⏰ ${item.time}</div>
+      </div>`;
+    el.onclick = () => toggleRoutine(item, el);
+    list.appendChild(el);
+  });
 }
 
-function saveNewTime(id, newTime) {
-    const item = routineData.find(r => r.id === id);
-    item.time = newTime;
-    localStorage.setItem('myRoutine', JSON.stringify(routineData));
-    renderRoutine();
+function toggleRoutine(item, el) {
+  const wasDone = !!state.routineDone[item.id];
+  if (!wasDone) {
+    state.routineDone[item.id] = true;
+    el.classList.add('done');
+    speak(`¡Muy bien! ${item.name} completado.`);
+    state.totalRoutine = (state.totalRoutine || 0) + 1;
+
+    if (!state.earnedLogros['primera_rutina']) {
+      state.earnedLogros['primera_rutina'] = true;
+      showToast('⭐ ¡Nuevo logro! Primera actividad');
+    }
+    const doneCount = Object.keys(state.routineDone).length;
+    if (doneCount === ROUTINE.length && !state.earnedLogros['rutina_completa']) {
+      state.earnedLogros['rutina_completa'] = true;
+      setTimeout(() => celebrate('🏅 ¡Rutina completa!', '¡Terminaste todas las actividades del día!'), 600);
+      launchConfetti();
+    }
+    // Check explorer
+    if (Object.keys(state.earnedLogros).length >= 4 && !state.earnedLogros['explorador']) {
+      state.earnedLogros['explorador'] = true;
+      showToast('🔭 ¡Nuevo logro! Gran explorador');
+    }
+  } else {
+    state.routineDone[item.id] = false;
+    el.classList.remove('done');
+  }
+  saveState();
 }
 
-function toggleDone(id) {
-    const item = routineData.find(r => r.id === id);
-    item.done = !item.done;
-    localStorage.setItem('myRoutine', JSON.stringify(routineData));
-    renderRoutine();
-    if(item.done) speak(`¡Muy bien! Has terminado ${item.name}`);
+// ═══════════════════════════════════════════════════════════
+// HOY (TODAY)
+// ═══════════════════════════════════════════════════════════
+const MOODS = ['😄','😊','😐','😢','😠','😴'];
+const MOOD_WORDS = ['Muy bien','Bien','Normal','Triste','Enojado','Cansado'];
+
+function renderHoy() {
+  // Mood quick select
+  const mq = document.getElementById('mood-quick');
+  mq.innerHTML = '';
+  MOODS.forEach((m, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'mood-quick-btn' + (state.todayMood === i ? ' picked' : '');
+    btn.textContent = m;
+    btn.title = MOOD_WORDS[i];
+    btn.onclick = () => {
+      state.todayMood = i;
+      document.querySelectorAll('.mood-quick-btn').forEach(b => b.classList.remove('picked'));
+      btn.classList.add('picked');
+      document.getElementById('today-emoji').textContent = m;
+      document.getElementById('today-title').textContent = '¡Hoy me siento ' + MOOD_WORDS[i].toLowerCase() + '!';
+      speak('Hoy te sientes ' + MOOD_WORDS[i] + '. Está bien sentirse así.');
+      saveState();
+    };
+    mq.appendChild(btn);
+  });
+
+  // Progress
+  const done = Object.keys(state.routineDone).filter(k => state.routineDone[k]).length;
+  const pct = Math.round(done / ROUTINE.length * 100);
+  document.getElementById('today-progress').style.width = pct + '%';
+  document.getElementById('today-progress-label').textContent = `${done} de ${ROUTINE.length} actividades hechas`;
+  if (state.todayMood !== null) {
+    document.getElementById('today-emoji').textContent = MOODS[state.todayMood];
+    document.getElementById('today-title').textContent = '¡Hoy me siento ' + MOOD_WORDS[state.todayMood].toLowerCase() + '!';
+  }
+
+  // Mini schedule
+  const sched = document.getElementById('today-schedule');
+  sched.innerHTML = '';
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  ROUTINE.forEach(item => {
+    const [h, m] = item.time.replace(' am','').replace(' pm','').split(':').map(Number);
+    const isPM = item.time.includes('pm') && h !== 12;
+    const itemMin = (isPM ? h + 12 : h) * 60 + m;
+    const diff = itemMin - nowMin;
+
+    let cls = 'sched-item future';
+    let badge = '';
+    if (state.routineDone[item.id]) { cls = 'sched-item past'; badge = '✅ Hecho'; }
+    else if (diff >= -30 && diff <= 30) { cls = 'sched-item current'; badge = '¡Ahora!'; }
+
+    const el = document.createElement('div');
+    el.className = cls;
+    el.innerHTML = `
+      <div class="sched-icon">${item.icon}</div>
+      <div class="sched-info">
+        <div class="sched-name">${item.name}</div>
+        <div class="sched-time">${item.time}</div>
+      </div>
+      ${badge ? `<div class="sched-badge">${badge}</div>` : ''}`;
+    el.onclick = () => speak(item.name + ' a las ' + item.time);
+    sched.appendChild(el);
+  });
 }
 
-// --- EMOCIONES ---
-function renderEmotions() {
-    const grid = document.getElementById('emotion-grid');
-    EMOTIONS.forEach(emo => {
-        const btn = document.createElement('div');
-        btn.style.cssText = "background:#f0f0f0; padding:15px; border-radius:20px; text-align:center; cursor:pointer";
-        btn.innerHTML = `<div style="font-size:2rem">${emo.face}</div><div style="font-size:0.8rem; font-weight:bold">${emo.label}</div>`;
-        btn.onclick = () => speak(emo.text);
-        grid.appendChild(btn);
-    });
+// ═══════════════════════════════════════════════════════════
+// LOGROS
+// ═══════════════════════════════════════════════════════════
+function renderLogros() {
+  const grid = document.getElementById('logros-grid');
+  grid.innerHTML = '';
+  LOGROS_DEF.forEach(lg => {
+    const earned = !!state.earnedLogros[lg.key];
+    const card = document.createElement('div');
+    card.className = 'logro-card' + (earned ? ' earned' : '');
+    card.innerHTML = `<span class="logro-icon">${lg.icon}</span><span class="logro-name">${lg.name}</span>`;
+    card.onclick = () => speak(earned ? '¡Ganaste el logro de ' + lg.name + '!' : 'Sigue intentando para ganar este logro.');
+    grid.appendChild(card);
+  });
+
+  const earnedCount = Object.keys(state.earnedLogros).length;
+  document.getElementById('stat-dias').textContent = state.activeDays || 1;
+  document.getElementById('stat-emociones').textContent = Object.keys(state.visitedEmotions).length;
+  document.getElementById('stat-rutinas').textContent = state.totalRoutine || 0;
+
+  // 3 days logro
+  if ((state.activeDays || 1) >= 3 && !state.earnedLogros['tres_dias']) {
+    state.earnedLogros['tres_dias'] = true;
+    saveState();
+  }
 }
 
-// --- SHARE ---
-function openShare() {
-    const done = routineData.filter(r => r.done).length;
-    document.getElementById('share-stats').innerText = `Hoy he completado ${done} actividades de mi rutina.`;
-    document.getElementById('share-overlay').style.display = 'flex';
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function closeShare() {
-    document.getElementById('share-overlay').style.display = 'none';
+// ═══════════════════════════════════════════════════════════
+// CELEBRATION
+// ═══════════════════════════════════════════════════════════
+function celebrate(title, msg) {
+  document.getElementById('celeb-title').textContent = title;
+  document.getElementById('celeb-msg').textContent = msg;
+  document.getElementById('celeb-overlay').classList.add('show');
+  speak(title + '. ' + msg);
+  launchConfetti();
+}
+function closeCeleb() {
+  document.getElementById('celeb-overlay').classList.remove('show');
+}
+function launchConfetti() {
+  const colors = ['#ffd93d','#ff6b6b','#a1c4fd','#74c7a5','#f9a8d4','#c4b5fd'];
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*0.8}s;
+      animation-duration:${1.4+Math.random()*0.8}s;
+      transform:rotate(${Math.random()*360}deg);
+      width:${6+Math.random()*10}px;
+      height:${6+Math.random()*10}px;
+      border-radius:${Math.random()>0.5?'50%':'3px'};
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 2800);
+  }
 }
 
-function speakCurrentScreen() {
-    if(state.currentTab === 'rutina') speak("Aquí puedes ver tus tareas. Pulsa el lápiz si quieres cambiar la hora.");
-    if(state.currentTab === 'emocion') speak("Cuéntame, ¿cómo te sientes hoy?");
-    if(state.currentTab === 'hoy') speak("Vamos a ver cuánto has avanzado hoy.");
-}
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+buildEmotionGrid();
+buildRoutine();
 
-// Init
-renderRoutine();
-renderEmotions();
+// Soft welcome after 1s
+setTimeout(() => speak('¡Hola! Bienvenido. Hoy aprenderemos sobre emociones y nuestra rutina del día.'), 1000);
 </script>
+
 </body>
 </html>
